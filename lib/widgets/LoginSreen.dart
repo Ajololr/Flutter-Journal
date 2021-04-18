@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group_journal/widgets/RegisterScreen.dart';
 
 class LoginsScreen extends StatefulWidget {
   LoginsScreen({Key key}) : super(key: key);
@@ -27,6 +28,10 @@ class _LoginsScreenState extends State<LoginsScreen> {
 
   void _onSubmit() {
     print(_emailController.text + " " + _passwordController.text);
+  }
+
+  void _navigateToRegister () {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => RegisterScreen()));
   }
 
   @override
@@ -70,9 +75,7 @@ class _LoginsScreenState extends State<LoginsScreen> {
                   SizedBox(height: 20),
                   InkWell(
                     child: Text("Add new groupmate"),
-                    onTap: () {
-                      print("Add new groupmate");
-                    },
+                    onTap: _navigateToRegister,
                   )
                 ],
               )
