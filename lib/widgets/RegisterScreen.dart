@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void setSuccess() {
     setState(() {
-      result = Provider.of<LocaleModel>(context).getString("groupmateAddSuccess");
+      result = context.read<LocaleModel>().getString("groupmateAddSuccess");
       resultColor = Colors.green;
     });
   }
