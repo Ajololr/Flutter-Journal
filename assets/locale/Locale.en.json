@@ -10,5 +10,10 @@
   "login": "Login",
   "addGroupmate": "Add new groupmate",
   "groupmateAddSuccess": "Added new groupmate",
-  "add": "Add"
+  "add": "Add",
+  "err_email": "No user found for that email",
+  "err_password": "Wrong password provided for that user",
+  "err_week_password": "The password provided is too weak",
+  "err_email_in_use": "The account already exists for that email",
+  "err_empty": "Please, fill all fields"
 }

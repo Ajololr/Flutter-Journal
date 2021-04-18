@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
 import 'package:provider/provider.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({Key key}) : super(key: key);
 
@@ -10,6 +12,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController _passwordController;
   TextEditingController _emailController;
   TextEditingController _firstNameController;
@@ -57,15 +60,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-  void _onSubmit() {
-    setSuccess();
+  void _onSubmit() async {
+    try {
+      setError("");
+
+      if (_emailController.text.isEmpty ||
+          _passwordController.text.isEmpty ||
+          _firstNameController.text.isEmpty ||
+          _lastNameController.text.isEmpty ||
+          _middleNameController.text.isEmpty ||
+          _birthdayController.text.isEmpty) {
+        setError(context.read<LocaleModel>().getString("err_empty"));
+        return;
+      }
+
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
+      setSuccess();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        setError(context.read<LocaleModel>().getString("err_week_password"));
+      } else if (e.code == 'email-already-in-use') {
+        setError(context.read<LocaleModel>().getString("err_email_in_use"));
+      } else {
+        setError(e.message);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(Provider.of<LocaleModel>(context).getString("addGroupmate")),
+          title:
+              Text(Provider.of<LocaleModel>(context).getString("addGroupmate")),
         ),
         body: Padding(
           padding: EdgeInsets.all(24),
@@ -82,7 +112,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _firstNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("firstName"),
+                      labelText: Provider.of<LocaleModel>(context)
+                          .getString("firstName"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -90,7 +121,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _lastNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("lastName"),
+                      labelText: Provider.of<LocaleModel>(context)
+                          .getString("lastName"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -98,7 +130,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _middleNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("middleName"),
+                      labelText: Provider.of<LocaleModel>(context)
+                          .getString("middleName"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -106,7 +139,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _birthdayController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("birthday"),
+                      labelText: Provider.of<LocaleModel>(context)
+                          .getString("birthday"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -114,7 +148,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("email"),
+                      labelText:
+                          Provider.of<LocaleModel>(context).getString("email"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -123,14 +158,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("password"),
+                      labelText: Provider.of<LocaleModel>(context)
+                          .getString("password"),
                     ),
                   ),
                 ],
               ),
               Column(
                 children: [
-                  ElevatedButton(onPressed: _onSubmit, child: Text(Provider.of<LocaleModel>(context).getString("add"))),
+                  ElevatedButton(
+                      onPressed: _onSubmit,
+                      child: Text(
+                          Provider.of<LocaleModel>(context).getString("add"))),
                   SizedBox(height: 20),
                   Text(result, style: TextStyle(color: resultColor))
                 ],

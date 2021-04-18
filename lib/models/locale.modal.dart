@@ -10,7 +10,7 @@ class LocaleModel extends ChangeNotifier {
 
   LocaleModel(BuildContext context) {
     _context = context;
-    setLocale(Locale.ru);
+    setLocale(Locale.en);
   }
 
   get locale => _selectedLocale;

@@ -38,7 +38,7 @@ class App extends StatelessWidget {
             ),
             home: Consumer<UserModel>(
               builder: (context, user, child) {
-                return user.isLoggedIn ? Text("Logged in") : LoginsScreen();
+                return user.isLoggedIn ? LoginsScreen() : LoginsScreen();
               },
             ),
           );

@@ -4,6 +4,8 @@ import 'package:flutter_group_journal/models/user.modal.dart';
 import 'package:flutter_group_journal/widgets/RegisterScreen.dart';
 import 'package:provider/provider.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class LoginsScreen extends StatefulWidget {
   LoginsScreen({Key key}) : super(key: key);
 
@@ -12,14 +14,17 @@ class LoginsScreen extends StatefulWidget {
 }
 
 class _LoginsScreenState extends State<LoginsScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController _passwordController;
   TextEditingController _emailController;
+  String error;
 
   @override
   void initState() {
     super.initState();
     _passwordController = TextEditingController();
     _emailController = TextEditingController();
+    error = "";
   }
 
   @override
@@ -29,13 +34,38 @@ class _LoginsScreenState extends State<LoginsScreen> {
     super.dispose();
   }
 
-  void _onSubmit() {
-    print(_emailController.text + " " + _passwordController.text);
-    Provider.of<UserModel>(context, listen: false).toggleIsLoggedIn();
+  void setError(String errorMessage) {
+    setState(() {
+      error = errorMessage;
+    });
   }
 
-  void _navigateToRegister () {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => RegisterScreen()));
+  void _onSubmit() async {
+    try {
+      setError("");
+
+      if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+        setError(context.read<LocaleModel>().getString("err_empty"));
+        return;
+      }
+
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
+      Provider.of<UserModel>(context, listen: false).toggleIsLoggedIn();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setError(context.read<LocaleModel>().getString("err_email"));
+      } else if (e.code == 'wrong-password') {
+        setError(context.read<LocaleModel>().getString("err_password"));
+      } else {
+        setError(e.message);
+      }
+    }
+  }
+
+  void _navigateToRegister() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (BuildContext context) => RegisterScreen()));
   }
 
   @override
@@ -59,7 +89,8 @@ class _LoginsScreenState extends State<LoginsScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("email"),
+                      labelText:
+                          Provider.of<LocaleModel>(context).getString("email"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -68,17 +99,24 @@ class _LoginsScreenState extends State<LoginsScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context).getString("password"),
+                      labelText: Provider.of<LocaleModel>(context)
+                          .getString("password"),
                     ),
                   ),
                 ],
               ),
               Column(
                 children: [
-                  ElevatedButton(onPressed: _onSubmit, child: Text(Provider.of<LocaleModel>(context).getString("login"))),
+                  ElevatedButton(
+                      onPressed: _onSubmit,
+                      child: Text(Provider.of<LocaleModel>(context)
+                          .getString("login"))),
+                  SizedBox(height: 20),
+                  Text(error, style: TextStyle(color: Colors.red)),
                   SizedBox(height: 20),
                   InkWell(
-                    child: Text(Provider.of<LocaleModel>(context).getString("addGroupmate")),
+                    child: Text(Provider.of<LocaleModel>(context)
+                        .getString("addGroupmate")),
                     onTap: _navigateToRegister,
                   )
                 ],
