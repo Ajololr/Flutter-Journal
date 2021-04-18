@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
 import 'package:flutter_group_journal/models/user.modal.dart';
+import 'package:flutter_group_journal/widgets/AppTabBar.dart';
 import 'package:flutter_group_journal/widgets/loginSreen.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +39,7 @@ class App extends StatelessWidget {
             ),
             home: Consumer<UserModel>(
               builder: (context, user, child) {
-                return user.isLoggedIn ? LoginsScreen() : LoginsScreen();
+                return user.isLoggedIn ? AppTabBar() : LoginsScreen();
               },
             ),
           );

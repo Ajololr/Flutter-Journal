@@ -15,5 +15,8 @@
   "err_password": "Wrong password provided for that user",
   "err_week_password": "The password provided is too weak",
   "err_email_in_use": "The account already exists for that email",
-  "err_empty": "Please, fill all fields"
+  "err_empty": "Please, fill all fields",
+  "group": "Group",
+  "map": "Map",
+  "settings": "Settings"
 }

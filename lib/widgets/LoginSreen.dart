@@ -41,6 +41,9 @@ class _LoginsScreenState extends State<LoginsScreen> {
   }
 
   void _onSubmit() async {
+    Provider.of<UserModel>(context, listen: false).toggleIsLoggedIn();
+    return;
+    
     try {
       setError("");
 
