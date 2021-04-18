@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group_journal/models/user.modal.dart';
 import 'package:flutter_group_journal/widgets/loginSreen.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(App());
+void main() => runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserModel()),
+      ],
+      child: App(),
+    ));
 
 class App extends StatelessWidget {
   @override
@@ -11,7 +18,11 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginsScreen(),
+      home: Consumer<UserModel>(
+        builder: (context, user, child) {
+          return user.isLoggedIn ? Text("Logged in") : LoginsScreen();
+        },
+      ),
     );
   }
 }

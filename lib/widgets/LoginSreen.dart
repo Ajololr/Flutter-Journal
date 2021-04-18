@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group_journal/models/user.modal.dart';
 import 'package:flutter_group_journal/widgets/RegisterScreen.dart';
+import 'package:provider/provider.dart';
 
 class LoginsScreen extends StatefulWidget {
   LoginsScreen({Key key}) : super(key: key);
@@ -28,6 +30,7 @@ class _LoginsScreenState extends State<LoginsScreen> {
 
   void _onSubmit() {
     print(_emailController.text + " " + _passwordController.text);
+    Provider.of<UserModel>(context, listen: false).toggleIsLoggedIn();
   }
 
   void _navigateToRegister () {
