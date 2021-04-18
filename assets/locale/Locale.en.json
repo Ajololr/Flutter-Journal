@@ -1,0 +1,14 @@
+{
+  "screen_login": "Group Journal",
+  "welcome": "Welcome Back!",
+  "email": "Email",
+  "password": "Password",
+  "firstName": "First name",
+  "lastName": "Last name",
+  "middleName": "Middle name",
+  "birthday": "Birthday",
+  "login": "Login",
+  "addGroupmate": "Add new groupmate",
+  "groupmateAddSuccess": "Added new groupmate",
+  "add": "Add"
+}

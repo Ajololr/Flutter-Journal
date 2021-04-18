@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group_journal/models/locale.modal.dart';
 import 'package:flutter_group_journal/models/user.modal.dart';
 import 'package:flutter_group_journal/widgets/RegisterScreen.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ class _LoginsScreenState extends State<LoginsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Login"),
+          title: Text(Provider.of<LocaleModel>(context).getString("login")),
         ),
         body: Padding(
           padding: EdgeInsets.all(24),
@@ -49,7 +50,7 @@ class _LoginsScreenState extends State<LoginsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                'Welcome back!',
+                Provider.of<LocaleModel>(context).getString("welcome"),
                 style: TextStyle(fontSize: 28),
               ),
               Column(
@@ -58,7 +59,7 @@ class _LoginsScreenState extends State<LoginsScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Email',
+                      labelText: Provider.of<LocaleModel>(context).getString("email"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -67,17 +68,17 @@ class _LoginsScreenState extends State<LoginsScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Password',
+                      labelText: Provider.of<LocaleModel>(context).getString("password"),
                     ),
                   ),
                 ],
               ),
               Column(
                 children: [
-                  ElevatedButton(onPressed: _onSubmit, child: Text("Login")),
+                  ElevatedButton(onPressed: _onSubmit, child: Text(Provider.of<LocaleModel>(context).getString("login"))),
                   SizedBox(height: 20),
                   InkWell(
-                    child: Text("Add new groupmate"),
+                    child: Text(Provider.of<LocaleModel>(context).getString("addGroupmate")),
                     onTap: _navigateToRegister,
                   )
                 ],

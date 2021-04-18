@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group_journal/models/locale.modal.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({Key key}) : super(key: key);
@@ -50,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void setSuccess() {
     setState(() {
-      result = "New groupmate added";
+      result = Provider.of<LocaleModel>(context).getString("groupmateAddSuccess");
       resultColor = Colors.green;
     });
   }
@@ -63,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Add new groupmate"),
+          title: Text(Provider.of<LocaleModel>(context).getString("addGroupmate")),
         ),
         body: Padding(
           padding: EdgeInsets.all(24),
@@ -80,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _firstNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'First name',
+                      labelText: Provider.of<LocaleModel>(context).getString("firstName"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -88,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _lastNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Last name',
+                      labelText: Provider.of<LocaleModel>(context).getString("lastName"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -96,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _middleNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Middle name',
+                      labelText: Provider.of<LocaleModel>(context).getString("middleName"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -104,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _birthdayController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Birthday',
+                      labelText: Provider.of<LocaleModel>(context).getString("birthday"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -112,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Email',
+                      labelText: Provider.of<LocaleModel>(context).getString("email"),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -121,14 +123,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Password',
+                      labelText: Provider.of<LocaleModel>(context).getString("password"),
                     ),
                   ),
                 ],
               ),
               Column(
                 children: [
-                  ElevatedButton(onPressed: _onSubmit, child: Text("Login")),
+                  ElevatedButton(onPressed: _onSubmit, child: Text(Provider.of<LocaleModel>(context).getString("add"))),
                   SizedBox(height: 20),
                   Text(result, style: TextStyle(color: resultColor))
                 ],
