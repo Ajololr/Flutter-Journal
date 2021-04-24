@@ -16,7 +16,13 @@
   "err_week_password": "The password provided is too weak",
   "err_email_in_use": "The account already exists for that email",
   "err_empty": "Please, fill all fields",
+
   "group": "Group",
   "map": "Map",
-  "settings": "Settings"
+  "settings": "Settings",
+
+  "groupmate_edit_success": "Groupmate saved",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "save": "Save"
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/types/Student.dart';
+import 'package:flutter_group_journal/widgets/StudentScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -20,7 +21,6 @@ class _GroupScreenState extends State<GroupScreen> {
 
   @override
   void initState() {
-    // students = [];
     loadStudents();
     super.initState();
   }
@@ -36,14 +36,14 @@ class _GroupScreenState extends State<GroupScreen> {
           doc.get("firstName"),
           doc.get("lastName"),
           doc.get("secondName"),
-          (doc.get("images") as List<String>),
+          (doc.get("images") as List)?.map((item) => item as String)?.toList(),
           doc.get("birthday").toDate(),
-          doc.get("lattitude"),
+          doc.get("latitude"),
           doc.get("longitude"),
           doc.get("videoUrl"),
         ));
     print(a);
-    // List<Student> students = a.toList();
+    List<Student> students = a.toList();
     setStudents(students);
   }
 
@@ -66,43 +66,51 @@ class _GroupScreenState extends State<GroupScreen> {
           Expanded(
             child: ListView.builder(
                 itemCount: students.length,
-                itemBuilder: (context, index) => Container(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    height: 220,
-                    width: double.maxFinite,
-                    child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 5,
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 220,
-                              child: Image.network(students[index].images[0]),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 10),
-                                  Text(students[index].firstName),
-                                  SizedBox(height: 10),
-                                  Text(students[index].lastName),
-                                  SizedBox(height: 10),
-                                  Text(students[index].secondName),
-                                  SizedBox(height: 10),
-                                  Text("Birthday: " +
-                                      DateFormat(DateFormat.YEAR_NUM_MONTH_DAY)
-                                          .format(students[index].birthday))
-                                ],
+                itemBuilder: (context, index) =>InkWell(
+                  onTap: () => Navigator.push(context,
+        MaterialPageRoute(builder: (BuildContext context) => StudentSceen(student: students[index]))),
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      height: 220,
+                      width: double.maxFinite,
+                      child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 220,
+                                child: Image.network(students[index].images[0]),
                               ),
-                            )
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Text(students[index].firstName),
+                                    SizedBox(height: 10),
+                                    Text(students[index].lastName),
+                                    SizedBox(height: 10),
+                                    Text(students[index].secondName),
+                                    SizedBox(height: 10),
+                                    Text("Birthday: " +
+                                        DateFormat(DateFormat.YEAR_NUM_MONTH_DAY)
+                                            .format(students[index].birthday))
+                                  ],
+                                ),
+                              )
                           ],
-                        )))),
+                        )
+                      )
+                      
+                    )
+                  ),
+                  )
           )
         ],
       ),
