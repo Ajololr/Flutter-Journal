@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group_journal/utils/firebase.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import 'package:flutter_group_journal/models/locale.modal.dart';
 
@@ -15,6 +17,7 @@ class StudentSceen extends StatefulWidget {
 }
 
 class _StudentSceenState extends State<StudentSceen> {
+  DateTime currentDate = DateTime.now();
   TextEditingController _firstNameController;
   TextEditingController _lastNameController;
   TextEditingController _middleNameController;
@@ -28,13 +31,18 @@ class _StudentSceenState extends State<StudentSceen> {
   void initState() {
     super.initState();
     _latitudeController = TextEditingController(text: widget.student.latitude);
-    _longitudeController = TextEditingController(text: widget.student.longitude);
-    _firstNameController = TextEditingController(text: widget.student.firstName);
+    _longitudeController =
+        TextEditingController(text: widget.student.longitude);
+    _firstNameController =
+        TextEditingController(text: widget.student.firstName);
     _lastNameController = TextEditingController(text: widget.student.lastName);
-    _middleNameController = TextEditingController(text: widget.student.secondName);
-    _birthdayController = TextEditingController(text: widget.student.birthday.toString());
+    _middleNameController =
+        TextEditingController(text: widget.student.secondName);
+    _birthdayController =
+        TextEditingController(text: DateFormat(DateFormat.YEAR_NUM_MONTH_DAY).format(widget.student.birthday));
     result = "";
     resultColor = Colors.transparent;
+    currentDate = widget.student.birthday;
   }
 
   @override
@@ -57,9 +65,24 @@ class _StudentSceenState extends State<StudentSceen> {
 
   void setSuccess() {
     setState(() {
-      result = context.read<LocaleModel>().getString("groupmateAddSuccess");
+      result = context.read<LocaleModel>().getString("groupmate_edit_success");
       resultColor = Colors.green;
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now());
+    if (pickedDate != null && pickedDate != currentDate) {
+      setState(() {
+        currentDate = pickedDate;
+      });
+      _birthdayController.text =
+          DateFormat(DateFormat.YEAR_NUM_MONTH_DAY).format(pickedDate);
+    }
   }
 
   void _onSubmit() async {
@@ -76,6 +99,14 @@ class _StudentSceenState extends State<StudentSceen> {
         return;
       }
 
+      widget.student.firstName = _firstNameController.text;
+      widget.student.lastName = _lastNameController.text;
+      widget.student.secondName = _middleNameController.text;
+      widget.student.latitude = _latitudeController.text;
+      widget.student.longitude = _longitudeController.text;
+      widget.student.birthday = currentDate;
+
+      await FirebaseHelper.updateStudent(widget.student);
       setSuccess();
     } catch (e) {
       setError(e.message);
@@ -85,85 +116,86 @@ class _StudentSceenState extends State<StudentSceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("${widget.student.firstName} ${widget.student.lastName}"),
-      ),
-      body: Padding(
+        appBar: AppBar(
+          title: Text("${widget.student.firstName} ${widget.student.lastName}"),
+        ),
+        body: Padding(
           padding: EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                  TextField(
-                    controller: _firstNameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context)
-                          .getString("firstName"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _lastNameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context)
-                          .getString("lastName"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _middleNameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context)
-                          .getString("middleName"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _birthdayController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText:
-                          Provider.of<LocaleModel>(context).getString("birthday"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: TextField(
-                          controller: _latitudeController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText:
-                                Provider.of<LocaleModel>(context).getString("latitude"),
-                          ),
-                        ),
+              TextField(
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText:
+                      Provider.of<LocaleModel>(context).getString("firstName"),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText:
+                      Provider.of<LocaleModel>(context).getString("lastName"),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _middleNameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText:
+                      Provider.of<LocaleModel>(context).getString("middleName"),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _birthdayController,
+                readOnly: true,
+                onTap: () => _selectDate(context),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText:
+                      Provider.of<LocaleModel>(context).getString("birthday"),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Flexible(
+                    child: TextField(
+                      controller: _latitudeController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: Provider.of<LocaleModel>(context)
+                            .getString("latitude"),
                       ),
-                      SizedBox(width: 20),
-                      Flexible(
-                        child: TextField(
-                          controller: _longitudeController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText:
-                                Provider.of<LocaleModel>(context).getString("longitude"),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _onSubmit,
-                    child: Text(Provider.of<LocaleModel>(context).getString("save"))
-                  ),
-                  SizedBox(height: 20),
-                  Text(result, style: TextStyle(color: resultColor)),
+                  SizedBox(width: 20),
+                  Flexible(
+                    child: TextField(
+                      controller: _longitudeController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: Provider.of<LocaleModel>(context)
+                            .getString("longitude"),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: _onSubmit,
+                  child: Text(
+                      Provider.of<LocaleModel>(context).getString("save"))),
+              SizedBox(height: 20),
+              Text(result, style: TextStyle(color: resultColor)),
             ],
           ),
-        )
-      );
+        ));
   }
 }

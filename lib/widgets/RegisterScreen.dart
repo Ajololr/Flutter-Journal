@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
-import 'package:flutter_group_journal/types/Student.dart';
 import 'package:flutter_group_journal/utils/firebase.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -94,7 +93,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       resultColor = Colors.green;
     });
   }
-
 
   void clearFields() {
     _passwordController.text = "";
