@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/utils/firebase.dart';
+import 'package:flutter_group_journal/widgets/VideoScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -38,8 +39,9 @@ class _StudentSceenState extends State<StudentSceen> {
     _lastNameController = TextEditingController(text: widget.student.lastName);
     _middleNameController =
         TextEditingController(text: widget.student.secondName);
-    _birthdayController =
-        TextEditingController(text: DateFormat(DateFormat.YEAR_NUM_MONTH_DAY).format(widget.student.birthday));
+    _birthdayController = TextEditingController(
+        text: DateFormat(DateFormat.YEAR_NUM_MONTH_DAY)
+            .format(widget.student.birthday));
     result = "";
     resultColor = Colors.transparent;
     currentDate = widget.student.birthday;
@@ -188,6 +190,23 @@ class _StudentSceenState extends State<StudentSceen> {
                 ],
               ),
               SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            VideoScreen(videoUrl: widget.student.videoUrl))),
+                      child: Text(Provider.of<LocaleModel>(context)
+                          .getString("watch_video"))),
+                  ElevatedButton(
+                      onPressed: () => {},
+                      child: Text(Provider.of<LocaleModel>(context)
+                          .getString("select_video"))),
+                ],
+              ),
               ElevatedButton(
                   onPressed: _onSubmit,
                   child: Text(
