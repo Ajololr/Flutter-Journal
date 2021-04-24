@@ -27,7 +27,7 @@ class _StudentSceenState extends State<StudentSceen> {
   @override
   void initState() {
     super.initState();
-    _latitudeController = TextEditingController(text: widget.student.lattitude);
+    _latitudeController = TextEditingController(text: widget.student.latitude);
     _longitudeController = TextEditingController(text: widget.student.longitude);
     _firstNameController = TextEditingController(text: widget.student.firstName);
     _lastNameController = TextEditingController(text: widget.student.lastName);
