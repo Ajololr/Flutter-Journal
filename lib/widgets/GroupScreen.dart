@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_group_journal/types/Student.dart';
-import 'package:flutter_group_journal/widgets/StudentScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+import 'package:flutter_group_journal/types/Student.dart';
+import 'package:flutter_group_journal/utils/firebase.dart';
+import 'package:flutter_group_journal/widgets/StudentScreen.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupScreen extends StatefulWidget {
   GroupScreen({Key key}) : super(key: key);
@@ -15,8 +15,6 @@ class GroupScreen extends StatefulWidget {
 }
 
 class _GroupScreenState extends State<GroupScreen> {
-  CollectionReference users =
-      FirebaseFirestore.instance.collection('group mates');
   List<Student> students = [];
 
   @override
@@ -31,19 +29,7 @@ class _GroupScreenState extends State<GroupScreen> {
   }
 
   loadStudents() async {
-    var data = await users.get();
-    var a = data.docs.map<Student>((doc) => new Student(
-          doc.get("firstName"),
-          doc.get("lastName"),
-          doc.get("secondName"),
-          (doc.get("images") as List)?.map((item) => item as String)?.toList(),
-          doc.get("birthday").toDate(),
-          doc.get("latitude"),
-          doc.get("longitude"),
-          doc.get("videoUrl"),
-        ));
-    print(a);
-    List<Student> students = a.toList();
+    var students = await FirebaseHelper.getAllStudents();
     setStudents(students);
   }
 
@@ -64,54 +50,52 @@ class _GroupScreenState extends State<GroupScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-                itemCount: students.length,
-                itemBuilder: (context, index) =>InkWell(
-                  onTap: () => Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => StudentSceen(student: students[index]))),
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      height: 220,
-                      width: double.maxFinite,
-                      child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 5,
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 220,
-                                child: Image.network(students[index].images[0]),
+              child: ListView.builder(
+            itemCount: students.length,
+            itemBuilder: (context, index) => InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            StudentSceen(student: students[index]))),
+                child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    height: 220,
+                    width: double.maxFinite,
+                    child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 220,
+                              child: Image.network(students[index].images[0]),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text(students[index].firstName),
+                                  SizedBox(height: 10),
+                                  Text(students[index].lastName),
+                                  SizedBox(height: 10),
+                                  Text(students[index].secondName),
+                                  SizedBox(height: 10),
+                                  Text("Birthday: " +
+                                      DateFormat(DateFormat.YEAR_NUM_MONTH_DAY)
+                                          .format(students[index].birthday))
+                                ],
                               ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 10),
-                                    Text(students[index].firstName),
-                                    SizedBox(height: 10),
-                                    Text(students[index].lastName),
-                                    SizedBox(height: 10),
-                                    Text(students[index].secondName),
-                                    SizedBox(height: 10),
-                                    Text("Birthday: " +
-                                        DateFormat(DateFormat.YEAR_NUM_MONTH_DAY)
-                                            .format(students[index].birthday))
-                                  ],
-                                ),
-                              )
+                            )
                           ],
-                        )
-                      )
-                      
-                    )
-                  ),
-                  )
-          )
+                        )))),
+          ))
         ],
       ),
     );
