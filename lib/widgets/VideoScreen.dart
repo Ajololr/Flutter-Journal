@@ -35,15 +35,15 @@ class _VideoScreenState extends State<VideoScreen> {
     return Container(
         child: Scaffold(
       appBar: AppBar(
-        title: Text(Provider.of<LocaleModel>(context).getString("vide_screen")),
+        title: Text(Provider.of<LocaleModel>(context).getString("video_screen")),
       ),
-      body: Chewie(
+      body:videoPlayerController != null ? Chewie(
         controller: ChewieController(
           videoPlayerController: videoPlayerController,
           autoPlay: true,
           looping: false,
         ),
-      ),
+      ) : null,
     ));
   }
 }

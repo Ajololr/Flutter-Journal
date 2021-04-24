@@ -26,5 +26,7 @@
   "longitude": "Longitude",
   "watch_video": "Watch video",
   "select_video": "Select video",
-  "save": "Save"
+  "save": "Save",
+
+  "video_screen": "Video"
 }

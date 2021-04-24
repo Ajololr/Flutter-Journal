@@ -26,5 +26,7 @@
   "longitude": "Долгота",
   "watch_video": "Смотреть видео",
   "select_video": "Выбрать видео",
-  "save": "Сохранить"
+  "save": "Сохранить",
+
+  "video_screen": "Видео"
 }

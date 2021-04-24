@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/utils/firebase.dart';
 import 'package:flutter_group_journal/widgets/VideoScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter_group_journal/models/locale.modal.dart';
-
 import 'package:flutter_group_journal/types/Student.dart';
 
 class StudentSceen extends StatefulWidget {
@@ -70,6 +72,17 @@ class _StudentSceenState extends State<StudentSceen> {
       result = context.read<LocaleModel>().getString("groupmate_edit_success");
       resultColor = Colors.green;
     });
+  }
+
+  Future _selectVideo() async {
+    final pickedFile = await ImagePicker.pickVideo(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File _video = File(pickedFile.path);
+      String url = await FirebaseHelper.uploadVideo(_video);
+      widget.student.videoUrl = url;
+      FirebaseHelper.updateStudent(widget.student);
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -194,15 +207,18 @@ class _StudentSceenState extends State<StudentSceen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            VideoScreen(videoUrl: widget.student.videoUrl))),
+                      onPressed: () => widget.student.videoUrl.isEmpty
+                          ? null
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      VideoScreen(
+                                          videoUrl: widget.student.videoUrl))),
                       child: Text(Provider.of<LocaleModel>(context)
                           .getString("watch_video"))),
                   ElevatedButton(
-                      onPressed: () => {},
+                      onPressed: _selectVideo,
                       child: Text(Provider.of<LocaleModel>(context)
                           .getString("select_video"))),
                 ],

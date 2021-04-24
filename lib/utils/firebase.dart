@@ -79,9 +79,8 @@ class FirebaseHelper {
     }
   }
 
-  static Future<String> uploadVideo(String path) async {
+  static Future<String> uploadVideo(File file) async {
     try {
-      File file = File(path);
       Reference videoRef = videosRef.child("${Uuid().v4()}.mov");
       await videoRef.putFile(file);
       return await videoRef.getDownloadURL();
