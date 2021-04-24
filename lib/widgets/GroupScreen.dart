@@ -72,7 +72,13 @@ class _GroupScreenState extends State<GroupScreen> {
                           children: [
                             Container(
                               height: 220,
-                              child: Image.network(students[index].images[0]),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Image(
+                                  image: NetworkImage(students[index].images[0]),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
                             Container(
                               padding: EdgeInsets.all(10),

@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
+import 'package:flutter_group_journal/types/Student.dart';
+import 'package:flutter_group_journal/utils/firebase.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,6 +18,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  DateTime currentDate = DateTime.now();
+  File _image;
   FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController _passwordController;
   TextEditingController _emailController;
@@ -46,6 +54,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now());
+    if (pickedDate != null && pickedDate != currentDate) {
+      setState(() {
+        currentDate = pickedDate;
+      });
+      _birthdayController.text =
+          DateFormat(DateFormat.YEAR_NUM_MONTH_DAY).format(pickedDate);
+    }
+  }
+
+  Future getImage() async {
+    final pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   void setError(String message) {
     setState(() {
       result = message;
@@ -57,6 +92,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       result = context.read<LocaleModel>().getString("groupmateAddSuccess");
       resultColor = Colors.green;
+    });
+  }
+
+
+  void clearFields() {
+    _passwordController.text = "";
+    _emailController.text = "";
+    _firstNameController.text = "";
+    _lastNameController.text = "";
+    _middleNameController.text = "";
+    _birthdayController.text = "";
+
+    setState(() {
+      currentDate = DateTime.now();
+      _image = null;
     });
   }
 
@@ -74,8 +124,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
 
+      var url = await FirebaseHelper.uploadImage(_image);
+      await FirebaseHelper.addStudent(
+          _firstNameController.text,
+          _lastNameController.text,
+          _middleNameController.text,
+          [url],
+          currentDate);
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text, password: _passwordController.text);
+      clearFields();
       setSuccess();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -102,12 +160,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(
-                'Placeholder!',
-                style: TextStyle(fontSize: 28),
-              ),
               Column(
                 children: [
+                  InkWell(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      alignment: Alignment.center,
+                      decoration: _image != null
+                          ? BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.cover, image: FileImage(_image)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
+                            )
+                          : null,
+                      child: _image == null
+                          ? Icon(
+                              Icons.camera_alt,
+                              size: 90,
+                            )
+                          : null,
+                    ),
+                    onTap: getImage,
+                  ),
+                  SizedBox(height: 20),
                   TextField(
                     controller: _firstNameController,
                     decoration: InputDecoration(
@@ -137,6 +214,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 20),
                   TextField(
                     controller: _birthdayController,
+                    onTap: () => _selectDate(context),
+                    readOnly: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: Provider.of<LocaleModel>(context)

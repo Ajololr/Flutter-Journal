@@ -34,17 +34,18 @@ class FirebaseHelper {
         .toList();
   }
 
-  static Future<void> addStudent(Student student) async {
+  static Future<void> addStudent(String firstName, String lastName,
+      String secondName, List<String> images, DateTime birthday) async {
     try {
       return await students.add({
-        'firstName': student.firstName,
-        'lastName': student.lastName,
-        'secondName': student.secondName,
-        'images': student.images,
-        'birthday': student.birthday,
-        'latitude': student.latitude,
-        'longitude': student.longitude,
-        'videoUrl': student.videoUrl,
+        'firstName': firstName,
+        'lastName': lastName,
+        'secondName': secondName,
+        'images': images,
+        'birthday': birthday,
+        'latitude': "",
+        'longitude': "",
+        'videoUrl': "",
       });
     } catch (e) {
       throw e;
@@ -68,9 +69,8 @@ class FirebaseHelper {
     }
   }
 
-  static Future<String> uploadImage(String path) async {
+  static Future<String> uploadImage(File file) async {
     try {
-      File file = File(path);
       Reference imageRef = imagesRef.child("${Uuid().v4()}.jpeg");
       await imageRef.putFile(file);
       return await imageRef.getDownloadURL();
