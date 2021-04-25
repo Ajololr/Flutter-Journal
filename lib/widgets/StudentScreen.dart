@@ -89,7 +89,7 @@ class _StudentSceenState extends State<StudentSceen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
         context: context,
-        initialDate: currentDate.isAfter(DateTime.now()) ? DateTime.now() :currentDate,
+        initialDate: currentDate.isAfter(DateTime.now()) ? DateTime.now() : currentDate,
         firstDate: DateTime(1900),
         lastDate: DateTime.now());
     if (pickedDate != null && pickedDate != currentDate) {
