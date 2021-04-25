@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/utils/firebase.dart';
+import 'package:flutter_group_journal/widgets/GaleryScreen.dart';
 import 'package:flutter_group_journal/widgets/VideoScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -88,7 +89,7 @@ class _StudentSceenState extends State<StudentSceen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
         context: context,
-        initialDate: currentDate,
+        initialDate: currentDate.isAfter(DateTime.now()) ? DateTime.now() :currentDate,
         firstDate: DateTime(1900),
         lastDate: DateTime.now());
     if (pickedDate != null && pickedDate != currentDate) {
@@ -133,6 +134,10 @@ class _StudentSceenState extends State<StudentSceen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("${widget.student.firstName} ${widget.student.lastName}"),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _onSubmit,
+          child: const Icon(Icons.check),
         ),
         body: Padding(
           padding: EdgeInsets.all(24),
@@ -223,10 +228,18 @@ class _StudentSceenState extends State<StudentSceen> {
                           .getString("select_video"))),
                 ],
               ),
-              ElevatedButton(
-                  onPressed: _onSubmit,
-                  child: Text(
-                      Provider.of<LocaleModel>(context).getString("save"))),
+              SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                GaleryScreen(student: widget.student))),
+                    child: Text(
+                        Provider.of<LocaleModel>(context).getString("galery"))),
+              ),
               SizedBox(height: 20),
               Text(result, style: TextStyle(color: resultColor)),
             ],
