@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
+import 'package:flutter_group_journal/models/theme.model.dart';
 import 'package:flutter_group_journal/models/user.modal.dart';
 import 'package:flutter_group_journal/widgets/AppTabBar.dart';
 import 'package:flutter_group_journal/widgets/loginSreen.dart';
@@ -14,6 +15,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (context) => UserModel()),
       ChangeNotifierProvider(create: (context) => LocaleModel(context)),
+      ChangeNotifierProvider(create: (context) => ThemeModel()),
     ],
     child: App(),
   ));
@@ -34,9 +36,7 @@ class App extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
             title: Provider.of<LocaleModel>(context).getString("screen_login"),
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: Provider.of<ThemeModel>(context).getTheme(),
             home: Consumer<UserModel>(
               builder: (context, user, child) {
                 return user.isLoggedIn ? AppTabBar() : LoginsScreen();

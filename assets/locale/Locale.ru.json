@@ -29,5 +29,12 @@
   "save": "Сохранить",
   "galery": "Галерея",
 
-  "video_screen": "Видео"
+  "video_screen": "Видео",
+
+  "lang": "Язык",
+  "lang_ru": "Русский",
+  "lang_en": "Английский",
+  "font_size": "Размер шрифта",
+  "primary_colour": "Основной цвет",
+  "dark_theme": "Тёмная тема"
 }
