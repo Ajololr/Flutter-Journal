@@ -34,7 +34,8 @@
   "lang": "Язык",
   "lang_ru": "Русский",
   "lang_en": "Английский",
-  "font_size": "Размер шрифта",
-  "primary_colour": "Основной цвет",
-  "dark_theme": "Тёмная тема"
+  "font_size": "Шрифта",
+  "primary_colour": "Цвет",
+  "dark_theme": "Тёмная тема",
+  "select": "Выбрать"
 }

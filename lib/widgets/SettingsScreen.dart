@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:flutter_group_journal/models/user.modal.dart';
 import 'package:flutter_group_journal/models/locale.modal.dart';
@@ -34,7 +35,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           title: Text(Provider.of<LocaleModel>(context).getString("settings")),
@@ -60,10 +60,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text(Provider.of<LocaleModel>(context).getString("lang")),
                   Container(
-                    width: 200,
+                    width: 230,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ListTile(
+                          // dense: true,
+                          contentPadding:
+                              EdgeInsets.all(0),
                           title: Text(Provider.of<LocaleModel>(context)
                               .getString("lang_ru")),
                           leading: Radio<Locale>(
@@ -73,6 +77,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                         ListTile(
+                          // dense: true,
+                          contentPadding:
+                              EdgeInsets.all(0),
                           title: Text(Provider.of<LocaleModel>(context)
                               .getString("lang_en")),
                           leading: Radio<Locale>(
@@ -97,6 +104,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onChanged: _onThemeChanged),
                 ],
               ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(Provider.of<LocaleModel>(context)
+                      .getString("primary_colour")),
+                  ElevatedButton(
+                      onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(Provider.of<LocaleModel>(context)
+                                  .getString("primary_colour")),
+                              content: SingleChildScrollView(
+                                child: ColorPicker(
+                                  pickerColor: Provider.of<ThemeModel>(context)
+                                      .getMainColor(),
+                                  onColorChanged:
+                                      Provider.of<ThemeModel>(context)
+                                          .setMainColor,
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(Provider.of<LocaleModel>(context)
+                                      .getString("select")),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                      child: Text(Provider.of<LocaleModel>(context)
+                          .getString("select"))),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      Provider.of<LocaleModel>(context).getString("font_size")),
+                  Slider(
+                      value: Provider.of<ThemeModel>(context).fontSize,
+                      onChanged: Provider.of<ThemeModel>(context).setFontSize,
+                      max: 28,
+                      min: 14)
+                ],
+              )
             ],
           ),
         ));
