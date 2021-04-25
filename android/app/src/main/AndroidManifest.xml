@@ -4,6 +4,8 @@
    <application
         android:label="flutter_group_journal"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBH3kVrxZUBUbuNlScKC_5k809ZxfQ83Mk"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
