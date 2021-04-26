@@ -16,6 +16,8 @@ class GroupScreen extends StatefulWidget {
 
 class _GroupScreenState extends State<GroupScreen> {
   List<Student> students = [];
+  List<Student> duplicateStudents = [];
+  TextEditingController _searchController;
 
   @override
   void initState() {
@@ -36,7 +38,32 @@ class _GroupScreenState extends State<GroupScreen> {
   setStudents(List<Student> loaded) {
     setState(() {
       students = loaded;
+      duplicateStudents = loaded;
     });
+  }
+
+  void filterSearchResults(String query) {
+    List<Student> dummySearchList = [];
+    dummySearchList.addAll(students);
+    if (query.isNotEmpty) {
+      List<Student> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (("${item.firstName} ${item.lastName} ${item.secondName}")
+            .contains(query)) {
+          dummyListData.add(item);
+        }
+      });
+      setState(() {
+        students.clear();
+        students.addAll(dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        students.clear();
+        students.addAll(duplicateStudents);
+      });
+    }
   }
 
   @override
@@ -49,6 +76,19 @@ class _GroupScreenState extends State<GroupScreen> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+                labelText:
+                    Provider.of<LocaleModel>(context).getString("search"),
+                hintText: Provider.of<LocaleModel>(context).getString("search"),
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)))),
+            onChanged: (value) {
+              filterSearchResults(value);
+            },
+          ),
           Expanded(
               child: ListView.builder(
             itemCount: students.length,
@@ -75,7 +115,8 @@ class _GroupScreenState extends State<GroupScreen> {
                               child: AspectRatio(
                                 aspectRatio: 1,
                                 child: Image(
-                                  image: NetworkImage(students[index].images[0]),
+                                  image:
+                                      NetworkImage(students[index].images[0]),
                                   fit: BoxFit.fill,
                                 ),
                               ),
