@@ -37,19 +37,22 @@ class _GroupScreenState extends State<GroupScreen> {
 
   setStudents(List<Student> loaded) {
     setState(() {
-      students = loaded;
-      duplicateStudents = loaded;
+      students.addAll(loaded);
+      duplicateStudents.addAll(loaded);
     });
   }
 
+  void rerender() {
+    setState(() {});
+  }
+
   void filterSearchResults(String query) {
-    List<Student> dummySearchList = [];
-    dummySearchList.addAll(students);
     if (query.isNotEmpty) {
       List<Student> dummyListData = [];
-      dummySearchList.forEach((item) {
+      duplicateStudents.forEach((item) {
         if (("${item.firstName} ${item.lastName} ${item.secondName}")
-            .contains(query)) {
+            .toLowerCase()
+            .contains(query.toLowerCase())) {
           dummyListData.add(item);
         }
       });
@@ -76,18 +79,22 @@ class _GroupScreenState extends State<GroupScreen> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-                labelText:
-                    Provider.of<LocaleModel>(context).getString("search"),
-                hintText: Provider.of<LocaleModel>(context).getString("search"),
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)))),
-            onChanged: (value) {
-              filterSearchResults(value);
-            },
+          Container(
+            padding: EdgeInsets.all(10),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                  labelText:
+                      Provider.of<LocaleModel>(context).getString("search"),
+                  hintText:
+                      Provider.of<LocaleModel>(context).getString("search"),
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)))),
+              onChanged: (value) {
+                filterSearchResults(value);
+              },
+            ),
           ),
           Expanded(
               child: ListView.builder(
@@ -96,10 +103,11 @@ class _GroupScreenState extends State<GroupScreen> {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            StudentSceen(student: students[index]))),
+                        builder: (BuildContext context) => StudentSceen(
+                            student: students[index],
+                            rerender: this.rerender))),
                 child: Container(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                     height: 220,
                     width: double.maxFinite,
                     child: Card(
@@ -121,23 +129,38 @@ class _GroupScreenState extends State<GroupScreen> {
                                 ),
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 10),
-                                  Text(students[index].firstName),
-                                  SizedBox(height: 10),
-                                  Text(students[index].lastName),
-                                  SizedBox(height: 10),
-                                  Text(students[index].secondName),
-                                  SizedBox(height: 10),
-                                  Text("Birthday: " +
-                                      DateFormat(DateFormat.YEAR_NUM_MONTH_DAY)
-                                          .format(students[index].birthday))
-                                ],
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      students[index].firstName,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      students[index].lastName,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      students[index].secondName,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      "Birthday: " +
+                                          DateFormat(
+                                                  DateFormat.YEAR_NUM_MONTH_DAY)
+                                              .format(students[index].birthday),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],

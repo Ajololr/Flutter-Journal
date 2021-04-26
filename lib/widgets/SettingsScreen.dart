@@ -59,38 +59,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(Provider.of<LocaleModel>(context).getString("lang")),
-                  Container(
-                    width: 230,
-                    child: Column(
+                   Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ListTile(
-                          // dense: true,
-                          contentPadding:
-                              EdgeInsets.all(0),
-                          title: Text(Provider.of<LocaleModel>(context)
-                              .getString("lang_ru")),
-                          leading: Radio<Locale>(
-                            value: Locale.ru,
-                            groupValue: _lang,
-                            onChanged: _onLangChanged,
-                          ),
+                        Row(
+                          children: [
+                            Radio<Locale>(
+                              value: Locale.ru,
+                              groupValue: _lang,
+                              onChanged: _onLangChanged,
+                            ),
+                            Text(Provider.of<LocaleModel>(context)
+                                .getString("lang_ru")),
+                          ],
                         ),
-                        ListTile(
-                          // dense: true,
-                          contentPadding:
-                              EdgeInsets.all(0),
-                          title: Text(Provider.of<LocaleModel>(context)
-                              .getString("lang_en")),
-                          leading: Radio<Locale>(
-                            value: Locale.en,
-                            groupValue: _lang,
-                            onChanged: _onLangChanged,
-                          ),
+                        Row(
+                          children: [
+                            Radio<Locale>(
+                              value: Locale.en,
+                              groupValue: _lang,
+                              onChanged: _onLangChanged,
+                            ),
+                            Text(Provider.of<LocaleModel>(context)
+                                .getString("lang_en")),
+                          ],
                         ),
                       ],
                     ),
-                  )
                 ],
               ),
               SizedBox(height: 20),

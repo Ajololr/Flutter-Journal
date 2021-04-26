@@ -13,8 +13,9 @@ import 'package:flutter_group_journal/types/Student.dart';
 
 class StudentSceen extends StatefulWidget {
   final Student student;
+  final void Function() rerender;
 
-  StudentSceen({@required this.student}) : super();
+  StudentSceen({@required this.student, @required this.rerender}) : super();
 
   @override
   _StudentSceenState createState() => _StudentSceenState();
@@ -89,7 +90,8 @@ class _StudentSceenState extends State<StudentSceen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
         context: context,
-        initialDate: currentDate.isAfter(DateTime.now()) ? DateTime.now() : currentDate,
+        initialDate:
+            currentDate.isAfter(DateTime.now()) ? DateTime.now() : currentDate,
         firstDate: DateTime(1900),
         lastDate: DateTime.now());
     if (pickedDate != null && pickedDate != currentDate) {
@@ -124,6 +126,7 @@ class _StudentSceenState extends State<StudentSceen> {
 
       await FirebaseHelper.updateStudent(widget.student);
       setSuccess();
+      widget.rerender();
     } catch (e) {
       setError(e.message);
     }
@@ -208,25 +211,31 @@ class _StudentSceenState extends State<StudentSceen> {
                 ],
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                      onPressed: () => widget.student.videoUrl.isEmpty
-                          ? null
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      VideoScreen(
-                                          videoUrl: widget.student.videoUrl))),
-                      child: Text(Provider.of<LocaleModel>(context)
-                          .getString("watch_video"))),
-                  ElevatedButton(
-                      onPressed: _selectVideo,
-                      child: Text(Provider.of<LocaleModel>(context)
-                          .getString("select_video"))),
-                ],
+              Container(
+                width: double.infinity,
+                child: Wrap(
+                  runSpacing: 20,
+                  spacing: 10,
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () => widget.student.videoUrl.isEmpty
+                            ? null
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        VideoScreen(
+                                            videoUrl:
+                                                widget.student.videoUrl))),
+                        child: Text(Provider.of<LocaleModel>(context)
+                            .getString("watch_video"))),
+                    ElevatedButton(
+                        onPressed: _selectVideo,
+                        child: Text(Provider.of<LocaleModel>(context)
+                            .getString("select_video"))),
+                  ],
+                ),
               ),
               SizedBox(height: 20),
               SizedBox(
