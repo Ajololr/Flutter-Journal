@@ -117,7 +117,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _firstNameController.text.isEmpty ||
           _lastNameController.text.isEmpty ||
           _middleNameController.text.isEmpty ||
-          _birthdayController.text.isEmpty) {
+          _birthdayController.text.isEmpty ||
+          _image == null) {
         setError(context.read<LocaleModel>().getString("err_empty"));
         return;
       }
