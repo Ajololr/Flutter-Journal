@@ -41,9 +41,6 @@ class _LoginsScreenState extends State<LoginsScreen> {
   }
 
   void _onSubmit() async {
-    Provider.of<UserModel>(context, listen: false).toggleIsLoggedIn();
-    return;
-    
     try {
       setError("");
 
@@ -78,54 +75,60 @@ class _LoginsScreenState extends State<LoginsScreen> {
           title: Text(Provider.of<LocaleModel>(context).getString("login")),
         ),
         body: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                Provider.of<LocaleModel>(context).getString("welcome"),
-                style: TextStyle(fontSize: 28),
-              ),
-              Column(
-                children: [
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText:
-                          Provider.of<LocaleModel>(context).getString("email"),
+            padding: EdgeInsets.fromLTRB(24, 24, 24 ,0),
+            child: ListView(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      Provider.of<LocaleModel>(context).getString("welcome"),
+                      style: TextStyle(fontSize: 28),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: Provider.of<LocaleModel>(context)
-                          .getString("password"),
+                    SizedBox(height: 50),
+                    Column(
+                      children: [
+                        TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: Provider.of<LocaleModel>(context)
+                                .getString("email"),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: Provider.of<LocaleModel>(context)
+                                .getString("password"),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  ElevatedButton(
-                      onPressed: _onSubmit,
-                      child: Text(Provider.of<LocaleModel>(context)
-                          .getString("login"))),
-                  SizedBox(height: 20),
-                  Text(error, style: TextStyle(color: Colors.red)),
-                  SizedBox(height: 20),
-                  InkWell(
-                    child: Text(Provider.of<LocaleModel>(context)
-                        .getString("addGroupmate")),
-                    onTap: _navigateToRegister,
-                  )
-                ],
-              )
-            ],
-          ),
-        ));
+                    SizedBox(height: 30),
+                    Column(
+                      children: [
+                        ElevatedButton(
+                            onPressed: _onSubmit,
+                            child: Text(Provider.of<LocaleModel>(context)
+                                .getString("login"))),
+                        SizedBox(height: 20),
+                        Text(error, style: TextStyle(color: Colors.red)),
+                        SizedBox(height: 20),
+                        InkWell(
+                          child: Text(Provider.of<LocaleModel>(context)
+                              .getString("addGroupmate")),
+                          onTap: _navigateToRegister,
+                        ),
+                        SizedBox(height: 24),
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            )));
   }
 }

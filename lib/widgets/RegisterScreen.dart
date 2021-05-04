@@ -155,9 +155,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Text(Provider.of<LocaleModel>(context).getString("addGroupmate")),
         ),
         body: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
+          child: ListView(
+            
             children: [
               Column(
                 children: [
@@ -249,7 +249,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Text(
                           Provider.of<LocaleModel>(context).getString("add"))),
                   SizedBox(height: 20),
-                  Text(result, style: TextStyle(color: resultColor))
+                  Text(result, style: TextStyle(color: resultColor)),
+                  SizedBox(height: 20),
                 ],
               )
             ],

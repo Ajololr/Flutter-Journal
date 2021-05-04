@@ -135,124 +135,129 @@ class _StudentSceenState extends State<StudentSceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("${widget.student.firstName} ${widget.student.lastName}"),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _onSubmit,
-          child: const Icon(Icons.check),
-        ),
-        body: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TextField(
-                controller: _firstNameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText:
-                      Provider.of<LocaleModel>(context).getString("firstName"),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: _lastNameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText:
-                      Provider.of<LocaleModel>(context).getString("lastName"),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: _middleNameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText:
-                      Provider.of<LocaleModel>(context).getString("middleName"),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: _birthdayController,
-                readOnly: true,
-                onTap: () => _selectDate(context),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText:
-                      Provider.of<LocaleModel>(context).getString("birthday"),
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Flexible(
-                    child: TextField(
-                      controller: _latitudeController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: Provider.of<LocaleModel>(context)
-                            .getString("latitude"),
-                      ),
-                    ),
+      appBar: AppBar(
+        title: Text("${widget.student.firstName} ${widget.student.lastName}"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onSubmit,
+        child: const Icon(Icons.check),
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _firstNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: Provider.of<LocaleModel>(context)
+                        .getString("firstName"),
                   ),
-                  SizedBox(width: 20),
-                  Flexible(
-                    child: TextField(
-                      controller: _longitudeController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: Provider.of<LocaleModel>(context)
-                            .getString("longitude"),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _lastNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText:
+                        Provider.of<LocaleModel>(context).getString("lastName"),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _middleNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: Provider.of<LocaleModel>(context)
+                        .getString("middleName"),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _birthdayController,
+                  readOnly: true,
+                  onTap: () => _selectDate(context),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText:
+                        Provider.of<LocaleModel>(context).getString("birthday"),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: _latitudeController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: Provider.of<LocaleModel>(context)
+                              .getString("latitude"),
+                        ),
                       ),
                     ),
-                  )
-                ],
-              ),
-              SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                child: Wrap(
-                  runSpacing: 20,
-                  spacing: 10,
-                  alignment: WrapAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () => widget.student.videoUrl.isEmpty
-                            ? null
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        VideoScreen(
-                                            videoUrl:
-                                                widget.student.videoUrl))),
-                        child: Text(Provider.of<LocaleModel>(context)
-                            .getString("watch_video"))),
-                    ElevatedButton(
-                        onPressed: _selectVideo,
-                        child: Text(Provider.of<LocaleModel>(context)
-                            .getString("select_video"))),
+                    SizedBox(width: 20),
+                    Flexible(
+                      child: TextField(
+                        controller: _longitudeController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: Provider.of<LocaleModel>(context)
+                              .getString("longitude"),
+                        ),
+                      ),
+                    )
                   ],
                 ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                GaleryScreen(student: widget.student))),
-                    child: Text(
-                        Provider.of<LocaleModel>(context).getString("galery"))),
-              ),
-              SizedBox(height: 20),
-              Text(result, style: TextStyle(color: resultColor)),
-            ],
-          ),
-        ));
+                SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  child: Wrap(
+                    runSpacing: 20,
+                    spacing: 10,
+                    alignment: WrapAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () => widget.student.videoUrl.isEmpty
+                              ? null
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          VideoScreen(
+                                              videoUrl:
+                                                  widget.student.videoUrl))),
+                          child: Text(Provider.of<LocaleModel>(context)
+                              .getString("watch_video"))),
+                      ElevatedButton(
+                          onPressed: _selectVideo,
+                          child: Text(Provider.of<LocaleModel>(context)
+                              .getString("select_video"))),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  GaleryScreen(student: widget.student))),
+                      child: Text(Provider.of<LocaleModel>(context)
+                          .getString("galery"))),
+                ),
+                SizedBox(height: 20),
+                Text(result, style: TextStyle(color: resultColor)),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
